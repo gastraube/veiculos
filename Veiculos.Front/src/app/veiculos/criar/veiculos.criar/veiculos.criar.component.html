@@ -1,0 +1,40 @@
+
+<form [formGroup]="myForm" *ngIf="myForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="exampleFormControlInput1">Cadastro de Veículo</label>
+    </div>
+    <div class="form-group">
+        <label for="modelo">Marca/Modelo</label>
+        <input type="text" class="form-control" id="modelo" name="modelo" formControlName="modelo">
+    </div> 
+    <div class="form-group">
+        <label for="ano">Ano</label>
+        <input type="text" class="form-control" id="ano" name="ano" formControlName="ano">
+    </div>
+    <div class="form-group">
+        <label for="cor">Cor</label>
+        <input type="text" class="form-control" id="cor" name="cor" formControlName="cor">
+    </div>
+    <div class="form-group">
+        <label for="placa">Placa</label>
+        <input type="text" class="form-control" id="placa" name="placa" formControlName="placa">
+    </div>
+    <div class="form-group">
+        <label for="tipoVeiculo">Tipo</label>
+        <select  class="form-control" id="tipoVeiculo" formControlName="tipoVeiculo">
+            <option [value]="0" >Selecione</option>     
+            <option [value]="veiculo.id" *ngFor="let veiculo of tipoVeiculos">{{veiculo.nome}}</option>     
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="qtde">Capacidade Passageiros</label>
+        <input type="text" class="form-control" id="qtde" name="qtde" formControlName="capacidadePassageiro">
+    </div>
+    <div class="form-group">
+        <label for="carga">Capacidade Carga</label>
+        <input type="text" class="form-control" id="carga"  name="carga"  formControlName="capacidadeCarga">
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+</form>    

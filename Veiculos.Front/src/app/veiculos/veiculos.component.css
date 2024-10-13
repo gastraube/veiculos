@@ -1,0 +1,23 @@
+.padding-row{
+    padding: 25px 1px 25px 1px;
+}
+
+h2{
+    margin: 0px; display: inline-block;
+}
+
+.span-subtitulo{
+    margin-left: 20px;
+}
+
+.btn-criar{
+    margin: auto;
+}
+
+.container-pesquisar{
+    background-color: #fff; height: 100vh;
+}
+
+.top-row{
+    height: 50px;
+}
