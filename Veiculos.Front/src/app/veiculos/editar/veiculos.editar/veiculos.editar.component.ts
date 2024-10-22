@@ -34,7 +34,7 @@ ngOnInit() {
   // this.veiculo.caminhao = new Caminhao();
 
   this._veiculosService.GetVeiculo(this.id).subscribe((res: any) => {
-
+    debugger;
     this.myForm = this.fb.group({
       tipoVeiculo: [res.tipoVeiculo],
       id: res.id,
@@ -42,8 +42,8 @@ ngOnInit() {
       modelo: res.modelo,
       placa: res.placa,
       cor: res.cor,
-      capacidadeCarga: res.caminhao == null ? 0 : res.caminhao.capacidadeCarga,
-      capacidadePassageiro: res.carro == null ? 0 : res.carro.capacidadePassageiro
+      capacidadeCarga: res.capacidadeCarga,
+      capacidadePassageiro: res.capacidadePassageiro
     });
   });
 };

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Veiculos.Web.Model
+namespace Veiculos.Domain.Model
 {
     public class Revisao
     {

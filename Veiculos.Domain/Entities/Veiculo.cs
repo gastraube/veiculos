@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Veiculos.Web.Model
+namespace Veiculos.Domain.Model
 {
     public class Veiculo
     {
@@ -13,7 +13,5 @@ namespace Veiculos.Web.Model
         public Carro? Carro { get; set; }
         public int? CaminhaoId { get; set; }
         public Caminhao? Caminhao { get; set; }
-        [NotMapped]
-        public TipoVeiculo TipoVeiculo { get; set; }
     }
 }

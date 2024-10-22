@@ -26,7 +26,7 @@ export class VeiculosCriarComponent {
   
   ngOnInit() {
       this.myForm = this.fb.group({
-        tipoVeiculo: "",
+        tipoVeiculo: "0",
         id: 0,
         ano: 0,
         modelo: "",

@@ -1,6 +1,11 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Veiculos.Web.Entity;
-using Veiculos.Web.Services;
+using Veiculos.Data.Repositories;
+using Veiculos.Data.Repositories.Abstractions;
+using Veiculos.Domain.Entity;
+using Veiculos.Service.Services;
+using Veiculos.Service.Services.Abstraction;
+using Veiculos.Web.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,18 +20,19 @@ builder.Services.AddCors(options =>
     });
 });
 
-//dependency injection
-builder.Services.AddSingleton<ICarroService, CarroService>();
-builder.Services.AddSingleton<ICaminhaoService, CaminhaoService>();
-builder.Services.AddSingleton<IVeiculoService, VeiculoService>();
-
-
 builder.Services.AddDbContext<VeiculosDbContext>(db => db.UseSqlServer(builder.Configuration.GetConnectionString("VeiculosConnectionString")), ServiceLifetime.Singleton);
 
-// Add services to the container.
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddSingleton<IMapper, Mapper>();
+builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+builder.Services.AddSingleton<IRevisaoRepository, RevisaoRepository>();
+builder.Services.AddSingleton<ICaminhaoRepository, CaminhaoRepository>();
+builder.Services.AddSingleton<ICarroRepository, CarroRepository>();
+builder.Services.AddSingleton<IVeiculoRepository, VeiculoRepository>();
+builder.Services.AddSingleton<IVeiculoService, VeiculoService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

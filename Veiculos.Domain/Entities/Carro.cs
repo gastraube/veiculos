@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace Veiculos.Web.Model
+namespace Veiculos.Domain.Model
 {
     public class Carro
-    {
-        [ForeignKey("CarroId")]
+    {     
         public int Id { get; set; }
         public int CapacidadePassageiro { get; set; }
         [JsonIgnore]

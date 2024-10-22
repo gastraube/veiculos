@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
-using Veiculos.Web.Model;
+using Veiculos.Domain.Model;
 
-namespace Veiculos.Web.Entity
+namespace Veiculos.Domain.Entity
 {
     public class VeiculosDbContext : DbContext
     {
@@ -18,22 +18,20 @@ namespace Veiculos.Web.Entity
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Veiculo>()
-                .HasOne(e => e.Carro)
-                .WithOne(e => e.Veiculo)
-                .HasForeignKey<Carro>(e => e.Id)
-                .IsRequired();
+                .HasOne(e => e.Carro);
 
             modelBuilder.Entity<Veiculo>()
-               .HasOne(e => e.Caminhao)
-               .WithOne(e => e.Veiculo)
-               .HasForeignKey<Caminhao>(e => e.Id)
-               .IsRequired();
+               .HasOne(e => e.Caminhao);
 
             modelBuilder.Entity<Carro>()
-                .HasOne(x => x.Veiculo);
+                .HasOne(e => e.Veiculo)
+                .WithOne(e => e.Carro)
+                .HasForeignKey<Veiculo>(e => e.CarroId);
 
             modelBuilder.Entity<Caminhao>()
-                .HasOne(x => x.Veiculo);
+                .HasOne(e => e.Veiculo)
+                .WithOne(e => e.Caminhao)
+                .HasForeignKey<Veiculo>(e => e.CaminhaoId);
 
             modelBuilder.Entity<Revisao>()
                 .HasOne(x => x.Veiculo);

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Veiculos.Web.Model;
-using Veiculos.Web.Services;
-
+using Veiculos.Domain.Models;
+using Veiculos.Service.Services.Abstraction;
 
 namespace Veiculos.Web.Controllers
 {
@@ -33,7 +32,7 @@ namespace Veiculos.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateVeiculo([FromBody] VeiculoAddOrUpdate veiculoFromBody)
+        public async Task<IActionResult> CreateVeiculo([FromBody] VeiculoDTO veiculoFromBody)
         {
 
             var veiculo = await _veiculoService.CreateVeiculo(veiculoFromBody);
@@ -49,8 +48,8 @@ namespace Veiculos.Web.Controllers
             });
         }
 
-        [HttpPut]       
-        public async Task<IActionResult> UpdateVeiculo([FromBody] VeiculoAddOrUpdate veiculoFromBody)
+        [HttpPut]
+        public async Task<IActionResult> UpdateVeiculo([FromBody] VeiculoDTO veiculoFromBody)
         {
 
             var veiculo = await _veiculoService.UpdateVeiculo(veiculoFromBody);
