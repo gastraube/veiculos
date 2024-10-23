@@ -12,7 +12,6 @@ export class VeiculosService {
   constructor(private httpClient: HttpClient) { }
 
   GetVeiculos() : Observable<any>{
-      debugger;
       return this.httpClient.get<any[]>(`${environment.apiUrl}/api/Veiculo`);
   }
 

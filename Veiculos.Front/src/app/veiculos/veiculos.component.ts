@@ -2,11 +2,11 @@ import { Component, Directive, EventEmitter, inject, Input, Output, QueryList, V
 import { Veiculo } from './veiculos.model';
 import { NgFor } from '@angular/common';
 import { VeiculosService } from './veiculos.service';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { VeiculosEditarComponent } from './editar/veiculos.editar/veiculos.editar.component';
+import { NgbActiveModal, NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { VeiculosEditarComponent } from './editar/veiculos.editar.component';
 import { SearchPipe } from '../search.pipe';
 import { FormsModule } from '@angular/forms';
-import { VeiculosCriarComponent } from './criar/veiculos.criar/veiculos.criar.component';
+import { VeiculosCriarComponent } from './criar/veiculos.criar.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @Directive({
@@ -41,9 +41,12 @@ export class VeiculosComponent {
 	veiculos: Veiculo[] = [];
 	private modalService = inject(NgbModal);
 	p: number = 1;
+	options:NgbModalOptions = {
+		size: 'lg',
+		backdrop: 'static'
+	  };
 
 	onSort({ column, direction }: SortEvent) {
-		debugger;
 
 		for (const header of this.headers) {
 			if (header.sortable !== column) {
@@ -62,18 +65,16 @@ export class VeiculosComponent {
 	}
 
 	openEditar(id: number) {
-		const activeModal = this.modalService.open(VeiculosEditarComponent, { size: 'lg' });
+		const activeModal = this.modalService.open(VeiculosEditarComponent, this.options);
 		activeModal.componentInstance.id = id;
 	}
 
 	openCriar() {
-		const activeModal = this.modalService.open(VeiculosCriarComponent, { size: 'lg' });
+		const activeModal = this.modalService.open(VeiculosCriarComponent, this.options);
 
 	}
 
 	deletar(id: number) {
-		debugger;
-
 		this._veiculosService.DeleteVeiculo(id).subscribe((res: any) => {
 			window.location.reload();
 		});
@@ -84,7 +85,6 @@ export class VeiculosComponent {
 
 	ngOnInit() {
 		this._veiculosService.GetVeiculos().subscribe((res: any) => {
-			console.log(res)
 			this.veiculos = res
 		});
 

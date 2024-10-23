@@ -1,5 +1,8 @@
+<div class="modal-header">
+    <h4 class="modal-title">Cadastrar Veículo</h4>
+  </div>
 
-
+<div class="modal-body">
 <form [formGroup]="myForm" *ngIf="myForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
         <label for="exampleFormControlInput1">Cadastro de Veículo</label>
@@ -35,7 +38,20 @@
         <label for="carga">Capacidade Carga</label>
         <input type="text" class="form-control" id="carga"  name="carga"  formControlName="capacidadeCarga">
     </div>
+  
     <div class="form-group">
-        <button type="submit" class="btn btn-primary">Salvar</button>
-    </div>
+        <ul *ngIf="revisoes!=undefined">
+          <li *ngFor="let revisao of revisoes">{{revisao.km}} KM | {{revisao.data | date: 'dd/MM/yyyy'}} | {{revisao.valorDaRevisao | currency : 'BRL'}} <a href="#" (click)="removeRevisao(revisao.tempId)">X</a></li>
+        </ul>
+      </div>
+
+      <div class="form-group">
+          <button type="button" (click)="openCriarRevisoes(id)" class="btn btn-warning btn-sm">+ Adicionar Revisões</button>        
+      </div>
 </form>    
+</div>
+
+<div class="modal-footer">
+    <button form="myForm" (click)="onSubmit()" type="submit" class="btn btn-warning">Salvar</button>  
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.dismiss('Cross click')">Fechar</button>     
+</div>  

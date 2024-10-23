@@ -20,16 +20,17 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddDbContext<VeiculosDbContext>(db => db.UseSqlServer(builder.Configuration.GetConnectionString("VeiculosConnectionString")), ServiceLifetime.Singleton);
+builder.Services.AddDbContext<VeiculosDbContext>(db => db.UseSqlServer(builder.Configuration.GetConnectionString("VeiculosConnectionString")), ServiceLifetime.Transient);
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddSingleton<IMapper, Mapper>();
-builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
-builder.Services.AddSingleton<IRevisaoRepository, RevisaoRepository>();
-builder.Services.AddSingleton<ICaminhaoRepository, CaminhaoRepository>();
-builder.Services.AddSingleton<ICarroRepository, CarroRepository>();
-builder.Services.AddSingleton<IVeiculoRepository, VeiculoRepository>();
-builder.Services.AddSingleton<IVeiculoService, VeiculoService>();
+builder.Services.AddTransient<IMapper, Mapper>();
+builder.Services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));    
+builder.Services.AddTransient<IRevisaoRepository, RevisaoRepository>();
+builder.Services.AddTransient<IRevisaoService, RevisaoService>();
+builder.Services.AddTransient<ICaminhaoRepository, CaminhaoRepository>();
+builder.Services.AddTransient<ICarroRepository, CarroRepository>();
+builder.Services.AddTransient<IVeiculoRepository, VeiculoRepository>();
+builder.Services.AddTransient<IVeiculoService, VeiculoService>();
 
 builder.Services.AddControllers();
 

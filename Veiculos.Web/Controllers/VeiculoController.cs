@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Veiculos.Domain.Model;
 using Veiculos.Domain.Models;
 using Veiculos.Service.Services.Abstraction;
 
@@ -20,6 +21,12 @@ namespace Veiculos.Web.Controllers
         public async Task<IActionResult> GetVeiculos()
         {
             var veiculos = await _veiculoService.GetAllVeiculos();
+
+            if (veiculos == null)
+            {
+                return NotFound();
+            }
+
             return Ok(veiculos);
         }
 
@@ -28,6 +35,12 @@ namespace Veiculos.Web.Controllers
         public async Task<IActionResult> GetVeiculoById(int Id)
         {
             var veiculos = await _veiculoService.GetVeiculoById(Id);
+
+            if (veiculos == null)
+            {
+                return NotFound();
+            }
+
             return Ok(veiculos);
         }
 
@@ -43,7 +56,7 @@ namespace Veiculos.Web.Controllers
 
             return Ok(new
             {
-                message = "Veiculo atualizado!",
+                message = "Veiculo criado!",
                 id = veiculo!.Id
             });
         }

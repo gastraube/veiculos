@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Veiculos.Data.Repositories.Abstractions;
 using Veiculos.Domain.Entity;
 
@@ -22,6 +23,12 @@ namespace Veiculos.Data.Repositories
             await SaveAsync();
         }
 
+        public async Task AddRangeAsync(List<T> entity)
+        {
+            await _dbSet.AddRangeAsync(entity);
+            await SaveAsync();
+        }
+
         public async Task DeleteByIdAsync(int id)
         {
             var entityToDelete = await _dbSet.FindAsync(id);
@@ -33,13 +40,23 @@ namespace Veiculos.Data.Repositories
             }
         }
 
+        public async Task DeleteRange(List<T> entity)
+        {
+            if (entity != null)
+            {
+                _dbSet.RemoveRange(entity);
+                await SaveAsync();
+            }
+        }
+
         public async Task<T> GetByIdAsync(int id)
         {
             return _dbSet.Find(id);
         }
 
-        public async Task<List<T>> GetAllAsync(bool tracked = true, params string[] includes)
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? predicate = null, bool tracked = true, params string[] includes)
         {
+            List<T> list;
             IQueryable<T> query = _dbSet;
 
             if (!tracked)
@@ -50,7 +67,10 @@ namespace Veiculos.Data.Repositories
             foreach (var inc in includes)
                 query = query.Include(inc);
 
-            return await query.ToListAsync();
+            if (predicate!=null)
+                return await query.Where(predicate).ToListAsync<T>();
+
+            return await query.ToListAsync<T>();
         }
 
         public async Task UpdateAsync(T entity)

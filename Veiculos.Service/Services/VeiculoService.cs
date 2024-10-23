@@ -17,22 +17,25 @@ namespace Veiculos.Service.Services
         private readonly ICarroRepository _carroRepository;
         private readonly ICaminhaoRepository _caminhaoRepository;
         private readonly IMapper _mapper;
+        private readonly IRevisaoService _revisaoService;
 
         public VeiculoService(IVeiculoRepository veiculoRepository,
             ICarroRepository carroRepository,
             ICaminhaoRepository caminhaoRepository,
-            IMapper mapper
+            IMapper mapper,
+            IRevisaoService revisaoService
             )
         {
             _veiculoRepository = veiculoRepository;
             _caminhaoRepository = caminhaoRepository;
             _carroRepository = carroRepository;
             _mapper = mapper;
+            _revisaoService = revisaoService;
         }
 
         public async Task<List<VeiculoDTO>> GetAllVeiculos()
         {
-            var veiculos = await _veiculoRepository.GetAllAsync(true, "Carro", "Caminhao");            
+            var veiculos = await _veiculoRepository.GetAllAsync(null, true, "Carro", "Caminhao");            
             return _mapper.Map<List<VeiculoDTO>>(veiculos); ;
         }
 
@@ -42,14 +45,16 @@ namespace Veiculos.Service.Services
 
             var veiculoDTO = _mapper.Map<VeiculoDTO>(veiculo);
 
-            if (veiculo.Carro != null)
+            if (veiculo.CarroId != null)
             {   
-                veiculoDTO.CapacidadePassageiro = veiculo.Carro.CapacidadePassageiro;
+                var carro = await _carroRepository.GetByIdAsync(veiculo.CarroId.Value);
+                veiculoDTO.CapacidadePassageiro = carro.CapacidadePassageiro;
                 veiculoDTO.TipoVeiculo = (int)TipoVeiculo.Carro;
             }
-            else if (veiculo.Caminhao != null)
+            else if (veiculo.CaminhaoId != null)
             {
-                veiculoDTO.CapacidadeCarga = veiculo.Caminhao.CapacidadeCarga;
+                var caminhao = await _caminhaoRepository.GetByIdAsync(veiculo.CaminhaoId.Value);
+                veiculoDTO.CapacidadeCarga = caminhao.CapacidadeCarga;
                 veiculoDTO.TipoVeiculo = (int)TipoVeiculo.Caminhao;
             }
             else
@@ -60,7 +65,9 @@ namespace Veiculos.Service.Services
 
         public async Task<VeiculoDTO?> UpdateVeiculo(VeiculoDTO veiculo)
         {
-            var veiculoBD = await _veiculoRepository.GetByIdAsync(veiculo.Id);
+            var veiculosBD = await _veiculoRepository.GetAllAsync(x => x.Id == veiculo.Id, true, "Carro", "Caminhao");
+
+            var veiculoBD = veiculosBD.FirstOrDefault();
 
             if (veiculoBD != null)
             {
@@ -70,13 +77,19 @@ namespace Veiculos.Service.Services
                 veiculoBD.Cor = veiculo.Cor;
 
                 if (veiculo.TipoVeiculo == (int)TipoVeiculo.Carro)
-                {
+                { 
+                    if (veiculoBD.Carro == null)
+                        veiculoBD.Carro = new Carro();
+
                     veiculoBD.Carro.CapacidadePassageiro = veiculo.CapacidadePassageiro.Value;
                     veiculoBD.Caminhao = null;
                 }
 
                 if (veiculo.TipoVeiculo == (int)TipoVeiculo.Caminhao)
                 {
+                    if (veiculoBD.Caminhao == null)
+                        veiculoBD.Caminhao = new Caminhao();
+
                     veiculoBD.Caminhao.CapacidadeCarga = veiculo.CapacidadeCarga.Value;
                     veiculoBD.Carro = null;
                 }
@@ -119,13 +132,19 @@ namespace Veiculos.Service.Services
 
             if (veiculo != null)
             {
-                if (veiculo.Carro != null)
+                await _veiculoRepository.DeleteByIdAsync(veiculo.Id);
+
+                var revisoes = await _revisaoService.GetRevisoesByVeiculoId(id);
+
+                if (revisoes != null)
+                    await _revisaoService.DeleteRevisoes(revisoes);
+
+                if (veiculo.CarroId != null)
                     await _carroRepository.DeleteByIdAsync(veiculo.CarroId.Value);
 
-                if (veiculo.Caminhao != null)
-                    await _caminhaoRepository.DeleteByIdAsync(veiculo.CaminhaoId.Value);
-
-                await _veiculoRepository.DeleteByIdAsync(veiculo.Id);
+                if (veiculo.CaminhaoId != null)
+                    await _caminhaoRepository.DeleteByIdAsync(veiculo.CaminhaoId.Value);                            
+              
                 return true;
             }
             return false;

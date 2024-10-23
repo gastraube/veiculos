@@ -9,5 +9,6 @@ namespace Veiculos.Data.Repositories.Abstractions
 {
     public interface IRevisaoRepository : IRepositoryBase<Revisao>
     {
+
     }
 }
